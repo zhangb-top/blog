@@ -1,0 +1,8 @@
+server:
+  port: 6060
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/blog?useSSL=false
+    username: root
+    password: 73.tGoAx~0eSQ*dC

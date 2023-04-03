@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.promise.dao.CommentDao">
+    <resultMap id="commentResultMap" type="com.promise.pojo.Comment">
+        <id column="id" property="id"/>
+        <result column="article_id" property="articleId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="top_id" property="topId"/>
+        <!--<collection column="{fatherId=id,articleId=article_id}" property="children"
+                    select="selectAllByArticleId"/>-->
+    </resultMap>
+    <!--父级查询-->
+    <!--<select id="selectAllByArticleId" resultMap="commentResultMap">
+        select id,
+               author,
+               context,
+               article_id,
+               create_time,
+               father_id,
+               (select title
+                from article
+                where article.id = comment.article_id) as articleTitle
+        from comment
+        where article_id = #{articleId}
+          and father_id = #{fatherId}
+    </select>-->
+
+    <select id="commentCount" resultType="Integer">
+        select count(*)
+        from comment
+        <where>
+            <if test="comment.author!=null and comment.author!='%%' ">
+                author like #{comment.author}
+            </if>
+            <if test="comment.articleTitle!=null and comment.articleTitle!='%%' ">
+                and article_id=(select id from article where title like #{comment.articleTitle})
+            </if>
+            <if test="comment.context!=null and comment.context!='%%' ">
+                and context like #{comment.context}
+            </if>
+        </where>
+        <if test="start!=null and pageSize!=null">
+            limit #{start},#{pageSize}
+        </if>
+    </select>
+    <select id="selectByPage" resultMap="commentResultMap">
+        select id,
+        author,
+        context,
+        article_id,
+        create_time,
+        parent_id,
+        (select title
+        from article
+        where article.id = comment.article_id) as articleTitle
+        from comment
+        <where>
+            <if test="comment.author!=null and comment.author!='%%' ">
+                author like #{comment.author}
+            </if>
+            <if test="comment.articleTitle!=null and comment.articleTitle!='%%' ">
+                and article_id=(select id from article where title like #{comment.articleTitle})
+            </if>
+            <if test="comment.context!=null and comment.context!='%%' ">
+                and context like #{comment.context}
+            </if>
+        </where>
+        order by create_time desc
+        limit #{start},#{pageSize}
+    </select>
+    <select id="selectByTopId" resultMap="commentResultMap">
+        select c.id,
+               c.author,
+               c.context,
+               c.article_id,
+               c.parent_id,
+               c.top_id,
+               c.create_time,
+               c1.author as
+                   parentName
+        from comment as c
+                 left join comment as c1 on c.parent_id = c1.id
+        where c.article_id = #{articleId}
+          and c.top_id != 0
+          and c.top_id = #{topId};
+    </select>
+    <select id="selectAllByArticleId" resultMap="commentResultMap">
+        select id,
+               author,
+               context,
+               article_id,
+               parent_id,
+               top_id,
+               create_time,
+               (select title from article where article.id = #{article_id}) as articleTitle
+        from comment
+        where article_id = #{articleId}
+          and top_id = 0
+        order by create_time desc;
+    </select>
+</mapper>

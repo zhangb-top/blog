@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.promise.dao.ArticleDao">
+    <resultMap id="articleResultDao" type="com.promise.pojo.Article">
+        <result column="create_time" property="createTime"/>
+        <result column="type_id" property="typeId"/>
+        <result column="tag_id" property="tagId"/>
+    </resultMap>
+    <delete id="delete">
+        delete c,a
+        from comment c
+        right join article a on c.article_id = a.id
+        where a.id in
+        <if test="ids.length!=0">
+            <foreach open="(" close=")" separator="," item="id" collection="ids">
+                #{id}
+            </foreach>
+        </if>
+        <if test="ids.length==0">
+            (0)
+        </if>
+    </delete>
+
+    <select id="selectByPage" resultMap="articleResultDao">
+        select id,
+        title,
+        description,
+        context,
+        author,
+        create_time,
+        status,
+        type_id,
+        tag_id,
+        love,
+        watch,
+        (select name from tag where id = tag_id) as tagName
+        from article
+        <if test="flag==true">
+            where status=1
+        </if>
+        order by create_time desc
+        limit #{start},#{pageSize};
+    </select>
+
+    <select id="selectDim" resultMap="articleResultDao">
+        select id,
+        title,
+        description,
+        context,
+        author,
+        create_time,
+        status,
+        type_id,
+        tag_id,
+        love,
+        watch,
+        (select name from tag where id=tag_id) as tagName
+        from article
+        <where>
+            <if test="author != null and author != '' ">
+                and author like #{author}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="startDate != null">
+                and <![CDATA[
+                    create_time > #{startDate}
+                ]]>
+            </if>
+            <if test="endDate != null">
+                and <![CDATA[
+                    create_time <= #{endDate}
+                ]]>
+            </if>
+        </where>
+        order by create_time desc
+        limit #{start},#{pageSize};
+    </select>
+
+    <select id="totalSelectDim" resultType="java.lang.Integer">
+        select count(*)
+        from article
+        <where>
+            <if test="author != null and author != '' ">
+                and author like #{author}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="startDate != null">
+                and <![CDATA[
+                    create_time > #{startDate}
+                ]]>
+            </if>
+            <if test="endDate != null">
+                and <![CDATA[
+                    create_time <= #{endDate}
+                ]]>
+            </if>
+        </where>
+    </select>
+
+    <select id="totalArticles" resultType="java.lang.Integer">
+        select count(*)
+        from article
+        <if test="flag==true">
+            where status = 1
+        </if>
+    </select>
+
+    <select id="getArticlesByTypeId" resultMap="articleResultDao">
+        select id,
+        title,
+        description,
+        context,
+        author,
+        create_time,
+        status,
+        type_id,
+        tag_id,
+        love,
+        watch,
+        (select name from tag where id = tag_id) as tagName
+        from article
+        where type_id = #{typeId}
+        <if test="flag==true">
+            and status=1
+        </if>
+        order by create_time desc
+        limit #{start},#{pageSize};
+    </select>
+
+    <select id="getArticlesByTagId" resultMap="articleResultDao">
+        select id,
+        title,
+        description,
+        context,
+        author,
+        create_time,
+        status,
+        type_id,
+        tag_id,
+        love,
+        watch,
+        (select name from tag where id = tag_id) as tagName
+        from article
+        where tag_id = #{tagId}
+        <if test="flag==true">
+            and status=1
+        </if>
+        order by create_time desc
+        limit #{start},#{pageSize};
+    </select>
+
+    <select id="totalGetArticlesByTypeId" resultType="java.lang.Integer">
+        select count(*)
+        from article
+        where type_id = #{typeId}
+        <if test="flag==true">
+            and status = 1
+        </if>
+    </select>
+
+    <select id="totalGetArticlesByTagId" resultType="java.lang.Integer">
+        select count(*)
+        from article
+        where tag_id = #{tagId}
+        <if test="flag==true">
+            and status = 1
+        </if>
+    </select>
+</mapper>

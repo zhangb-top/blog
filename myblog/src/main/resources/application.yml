@@ -1,0 +1,28 @@
+spring:
+  profiles:
+    active: @profile.active@
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  main:
+    banner-mode: off
+    log-startup-info: false
+
+mybatis:
+  mapper-locations: classpath:com/promise/dao/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+server:
+  servlet:
+    context-path: /api
+
+logging:
+  file:
+    path: ./logging
+  level:
+    root: warn
+  logback:
+    rollingpolicy:
+      max-file-size: 60MB
+      file-name-pattern: service.%d{yyyy-MM-dd}.%i.log
