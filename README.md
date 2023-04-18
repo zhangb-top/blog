@@ -42,25 +42,25 @@
 
    - 首页
 
-     <img src="D:\java\wke\myblog\img\phone-index.jpg" style="zoom: 25%;" />
+     <img src="./img/phone-index.jpg" style="zoom: 25%;" />
 
    - 分类页
 
-     <img src="D:\java\wke\myblog\img\phone-type.jpg" alt="phone-type" style="zoom:25%;" />
+     <img src="./img/phone-type.jpg" alt="phone-type" style="zoom:25%;" />
 
    - 归档页
 
-     <img src="D:\java\wke\myblog\img\phone-my.jpg" alt="phone-my" style="zoom:25%;" />
+     <img src="./img/phone-my.jpg" alt="phone-my" style="zoom:25%;" />
 
    - chatGPT聊天页
 
-     <img src="D:\java\wke\myblog\img\phone-ChatGPT.jpg" alt="phone-ChatGPT" style="zoom:25%;" />
+     <img src="./img/phone-ChatGPT.jpg" alt="phone-ChatGPT" style="zoom:25%;" />
 
 3. 后台管理系统
 
    ![archive](https://github.com/zhangb-top/blog/blob/main/img/add.png)
 
-   <img src="D:\java\wke\myblog\img\phone-comment.jpg" alt="phone-comment" style="zoom:25%;" />
+   <img src="./img/phone-comment.jpg" alt="phone-comment" style="zoom:25%;" />
 
 ## 联系我
 
